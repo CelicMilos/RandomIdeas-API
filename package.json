@@ -1,0 +1,14 @@
+{
+  "name": "20-randomideas-rest-api",
+  "version": "1.0.0",
+  "description": "Random idea app",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Miloš Čelić",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
