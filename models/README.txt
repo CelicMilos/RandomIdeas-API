@@ -1,0 +1,1 @@
+Konvencija za imena modela je da pocinju velikim slovom i uvek su u jednini. 

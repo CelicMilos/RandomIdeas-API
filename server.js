@@ -1,6 +1,10 @@
 const express = require("express");
 const app = express();
-const port = 5000;
+require("dotenv").config();
+const port = process.env.PORT;
+//povezivanje sa bazom
+const connectDB = require("./config/db");
+connectDB();
 
 //Body parser middlewere-za parsovanje sirovih podataka,kada saljemo na server u 'body'
 app.use(express.json()); //za slanje sirovog jsona
@@ -18,4 +22,4 @@ app.get("/website", (request, response) => {
 const ideasRouter = require("./routes/ideas");
 //app.use()- u zagradi krajnja url tacka (endpoint) i odakle pozivamo
 app.use("/api/ideas", ideasRouter);
-app.listen(port, () => console.log(`Server is litening at ${port}`));
+app.listen(port, () => console.log(`Server is listening at ${port}`));
