@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const app = express();
 require("dotenv").config();
@@ -5,6 +6,9 @@ const port = process.env.PORT;
 //povezivanje sa bazom
 const connectDB = require("./config/db");
 connectDB();
+
+//Static folder
+app.use(express.static(path.join(__dirname, "public"))); //nas public folder postaje statican
 
 //Body parser middlewere-za parsovanje sirovih podataka,kada saljemo na server u 'body'
 app.use(express.json()); //za slanje sirovog jsona
