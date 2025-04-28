@@ -1,8 +1,10 @@
+import IdeasApi from "../services/ideasApi";
 class IdeaList {
   constructor() {
     this._ideaListEl = document.querySelector("#idea-list");
     //hardcoded ideas,just for practise
     this._ideas = [];
+    this.getIdeas();
     //For differnet tag colors
     this._validTags = new Set();
     this._validTags.add("technology");
@@ -11,6 +13,18 @@ class IdeaList {
     this._validTags.add("education");
     this._validTags.add("health");
     this._validTags.add("inventions");
+  }
+  async getIdeas() {
+    try {
+      const response = await IdeasApi.getIdeas(); //iz services/IdeasApi.js
+      this._ideas = response.data.data; //iz bekenda, routes/ideas.js
+      //response.data.data- prvi data je od axiosa,drugi data od api zahteva
+      //sucajnost samo, da smo u api zahtevu(get)umestu data:ideas napisali
+      // ideas:idea,bilo bi response.ideas.data
+      this.render();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   getTagClass(tag) {
