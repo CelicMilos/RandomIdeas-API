@@ -14,6 +14,15 @@ class IdeaList {
     this._validTags.add("health");
     this._validTags.add("inventions");
   }
+  adEventListeners() {
+    this._ideaListEl.addEventListener("click", (e) => {
+      if (e.target.classList.contains("fa-times")) {
+        e.stopImmediatePropagation();
+        const ideaId = e.target.parentElement.parentElement.dataset.id;
+        this.deleteIdea(ideaId);
+      }
+    });
+  }
   async getIdeas() {
     try {
       const response = await IdeasApi.getIdeas(); //iz services/IdeasApi.js
@@ -25,6 +34,20 @@ class IdeaList {
     } catch (error) {
       console.log(error);
     }
+  }
+  async deleteIdea(ideaId) {
+    try {
+      const response = await IdeasApi.deleteIdea(ideaId);
+      this._ideas.filter((idea) => idea._id !== ideaId); //daje sve osim one koju smo izbrisali
+      this.getIdeas();
+    } catch (error) {
+      alert("You can not delete this resource"); //zato sto se korisnicka imena ne slazu
+    }
+  }
+
+  addIdeaToList(idea) {
+    this._ideas.push(idea);
+    this.render();
   }
 
   getTagClass(tag) {
@@ -43,9 +66,13 @@ class IdeaList {
     this._ideaListEl.innerHTML = this._ideas
       .map((idea) => {
         const tagClass = this.getTagClass(idea.tag);
+        const deleteBtn =
+          idea.username === localStorage.getItem("username")
+            ? `<button class="delete"><i class="fas fa-times"></i></button>`
+            : "";
         return `
-        <div class="card">
-          <button class="delete"><i class="fas fa-times"></i></button>
+        <div class="card" data-id="${idea._id}"> <!-- MongoDB id -->
+         ${deleteBtn}
           <h3>
            ${idea.text}
           </h3>
@@ -57,6 +84,8 @@ class IdeaList {
         </div>`;
       })
       .join("");
+
+    this.adEventListeners(); //posle renderovanja
   }
 }
 export default IdeaList;

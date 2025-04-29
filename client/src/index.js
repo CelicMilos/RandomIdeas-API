@@ -4,9 +4,9 @@ import Modal from "./components/Modal";
 import IdeaList from "./components/IdeaList";
 import IdeaForm from "./components/IdeaForm";
 
-const modal = new Modal();
-const ideaList = new IdeaList();
+new Modal();
+new IdeaList();
 const ideaForm = new IdeaForm();
 
-ideaList.render();
+// ideaList.render();
 ideaForm.render();

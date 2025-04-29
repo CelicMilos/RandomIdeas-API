@@ -54,18 +54,27 @@ router.post("/", async (request, response) => {
 //Update idea
 router.put("/:id", async (request, response) => {
   try {
-    const updatedIdea = await Idea.findByIdAndUpdate(
-      //isto mongoose metod
-      request.params.id,
-      {
-        $set: {
-          text: request.body.text,
-          tag: request.body.tag,
+    const idea = await Idea.findById(request.params.id);
+    //Uporedjivanje korisnickih imena
+    if (idea.username === request.body.username) {
+      const updatedIdea = await Idea.findByIdAndUpdate(
+        //isto mongoose metod
+        request.params.id,
+        {
+          $set: {
+            text: request.body.text,
+            tag: request.body.tag,
+          },
         },
-      },
-      { new: true }
-    );
-    response.json({ success: true, data: updatedIdea });
+        { new: true }
+      );
+      return response.json({ success: true, data: updatedIdea });
+    }
+    //Ukoliko se korisnicka imena ne slazu
+    response.status(403).json({
+      succes: false,
+      error: "You are not autherized to update this resource",
+    });
   } catch (error) {
     console.log(error);
     response
@@ -77,8 +86,18 @@ router.put("/:id", async (request, response) => {
 //Delete Idea
 router.delete("/:id", async (request, response) => {
   try {
-    await Idea.findByIdAndDelete(request.params.id);
-    response.json({ succes: true, data: {} });
+    const idea = await Idea.findById(request.params.id);
+
+    //Uporedjivanje korisnickih imena
+    if (idea.username === request.body.username) {
+      await Idea.findByIdAndDelete(request.params.id);
+      return response.json({ succes: true, data: {} });
+    }
+    //Ukoliko se korisnicka imena ne slazu
+    response.status(403).json({
+      succes: false,
+      error: "You are not autherized to delete this resource",
+    });
   } catch (error) {
     console.log(error);
     response.status(500).json({ succes: false, error: "Something went wrong" });
